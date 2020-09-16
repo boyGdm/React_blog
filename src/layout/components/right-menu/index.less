@@ -1,0 +1,45 @@
+/***
+* @auth: dmx
+* @time: 2020/7/2
+* @func: 
+* @params: 
+* @return: 
+* @updateTime: 
+***/
+// https://www.oxxostudio.tw/articles/201501/css-flexbox.html
+.right-menu {
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  padding-left: 20px;
+
+  .language {
+    margin: 0 12px;
+  }
+  .user {
+    margin-right: 15px;
+    line-height: 44px;
+
+
+    .name {
+      position: relative;
+      top: 2px;
+      margin-left: 15px;
+      cursor: pointer;
+    }
+
+    // 重置ant-desig样式
+    .ant-badge {
+      cursor: pointer;
+
+      .ant-badge-count {
+        padding: 0 3px;
+        min-width: 26px;
+        width: 12px;
+        height: 14px;
+        line-height: 14px;
+      }
+    }
+  }
+
+}
