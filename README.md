@@ -44,4 +44,4 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## 界面
-![image]()
+![image](https://github.com/boyGdm/React_blog/blob/master/r1.png)
