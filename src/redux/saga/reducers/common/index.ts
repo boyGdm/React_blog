@@ -24,6 +24,5 @@ export default ( state = initialStateSetter, action: ActionParams ) => {
       }
     }
   }
-
   return state;
 };

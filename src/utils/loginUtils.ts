@@ -11,17 +11,20 @@
 import store from '../redux';
 import LocalStore from './LocalStore';
 import { refreshToken } from '../http/user';
-import { loginAction } from '../redux/saga/actions/user';
+import { loginAction } from '../redux/saga/actions/login';
 
-const TokenKey = 'BLOG_JWT::token';
+const TokenKey = 'token';
+const UserInfo = 'userinfo';
 const TokenDate = 'BLOG_JWT::date';
 let isRefreshing = false;
 
 // 暴露一个对象
 export default  {
   // 1 登录过后保存登录信息 和 token
-  saveLoginState (token: string) {
+  saveLoginState (token: string, userInfo?:string) {
     LocalStore.set(TokenKey, token);
+    LocalStore.set(UserInfo, JSON.stringify(userInfo));
+
     // 过期时间处理 24小时后过期
     // 小伙伴们可以随便整，
     LocalStore.set(TokenDate, new Date().getTime() + 1860000);
@@ -31,6 +34,7 @@ export default  {
     // 先从本地存储中删除数据
     LocalStore.remove(TokenKey);
     LocalStore.remove(TokenDate);
+    LocalStore.remove(UserInfo);
     // 退出登录
     store.dispatch(loginAction.logOut());
     // 处理页面路由
@@ -42,7 +46,7 @@ export default  {
     // eg： 加入，某个项目，先登录--->选择城市---> 其他选择
     // 写一下获取的逻辑，但是实际项目中 用不用，根据小伙伴们的实际需求
     // 判断用户是否登录
-    const storeState = store.getState().user.isLogin;
+    const storeState = store.getState().login.isLogin;
     // 如果登陆了，就返回true，页面就会响应这个值，去获取用户信息。
     if( storeState ) return true;
 
@@ -51,6 +55,7 @@ export default  {
     if( localToken ) {
       store.dispatch( loginAction.success({
         token: localToken,
+        nickname: LocalStore.get('userinfo')? JSON.parse(LocalStore.get('userinfo') as string): 'admin'
       }) );
 
       return true;

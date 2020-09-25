@@ -13,7 +13,7 @@ import {RouteConfigComponentProps} from 'react-router-config';
 import { renderRoutes } from 'react-router-config';
 import { useSelector } from 'react-redux';
 import useActions from '../hooks/useActions';
-import { Layout, Spin, Drawer, Form, Radio, Button } from 'antd';
+import { Layout, Spin, Drawer, Form, Radio, Button, Switch } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -55,6 +55,7 @@ const BlogLayout: React.FC<IProps> = (props) => {
   }, []);
 
   const handleSettingClick = useCallback((values) => {
+
     actions.setTheme(values);
   }, [actions]);
 
@@ -124,9 +125,9 @@ const BlogLayout: React.FC<IProps> = (props) => {
                 label="导航主题"
                 name="theme"
               >
-                <Group value={theme}>
-                  <Radio value="dark">dark-暗色系</Radio>
-                  <Radio value="light">light-亮色系</Radio>
+                <Group value={theme} size='middle'>
+                  <Radio.Button value="dark">dark-暗色系</Radio.Button>
+                  <Radio.Button value="light">light-亮色系</Radio.Button>
                 </Group>
               </Item>
               <Item>

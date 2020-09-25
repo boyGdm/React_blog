@@ -6,7 +6,7 @@
 import React, {memo} from 'react';
 import { Redirect } from 'react-router-dom';
 import useActions from '../../hooks/useActions';
-import { loginActionPromise } from '../../redux/saga/actions/user';
+import { loginActionPromise } from '../../redux/saga/actions/login';
 import ParticlesBg from 'particles-bg';
 import LoginMain from './login-layout/LoginMain';
 
@@ -16,10 +16,10 @@ import {useSelector} from 'react-redux';
 interface IProps {
 
 }
-
+console.log('@/assets/img/logo.jpg');
 const Login: React.FC<IProps> = (props) => {
 
-  const { isLogin, loading } = useSelector((state: IState) => state.user );
+  const { isLogin, loading } = useSelector((state: IState) => state.login );
   const actions = useActions({
     loginActionPromise,
   });
@@ -37,7 +37,7 @@ const Login: React.FC<IProps> = (props) => {
         />
         <div className='login-layout-footer' />
         <ParticlesBg
-          type="lines"
+          type="random"
           bg
         />
       </div>

@@ -6,30 +6,33 @@ import {
   delay,
   cancel,
 } from 'redux-saga/effects';
-import { loginAction } from '../../actions/user';
-import { login } from '../../../../http/user';
+import { loginAction } from '../../actions/login';
+import { userAction } from "../../actions/user";
+import { login,getCaptcha } from '../../../../http/user';
 import loginUtils from '../../../../utils/loginUtils';
-
+import { message } from "antd";
+import logo  from  '../../../../assets/img/logo.jpg'
 
 function* authorize (action: ActionParams<ILogin>) {
   // 一进来过后， 就去调用后端的登录接口
   try {
-    // call 表示用同步的方式 做异步的事情
-    // const res = yield call(login, action.payload);
-    // const token = res.payload;
-    const token = 'abs.abs.abs';
+    const loginRes = yield call(login, action.payload);
+    message.info(loginRes?loginRes.msg: '');
+    yield delay(1000);
+    if(loginRes.code === 0 ){
+      const { token, userinfo } = loginRes.data;
+      yield call(loginUtils.saveLoginState, token, userinfo);
+      yield put(userAction.trigger({nickname:userinfo.nickname,avata:logo}));
+      // type: userAction.TRIGGER,
+      //     payload: { user: {nickname:userinfo.nickname,avata:logo,}}
+      // 如果需要延迟
+      yield put(loginAction.success(token));
+    }
     // call 效果上表示同步的事情
     // 一般登录成功过后会获取一个token身份标识 需要再本地存储进行存储，
     // 同时本次登录过后，需要把token放进下一次请求的请求头里去，
     // 如果别的地方需要用到token 就可以再redux中进行操作，一般不需要
 
-    //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-    // .eyJfaWQiOiI1ZWUzYjBmMTA1NjkzMjA2NjRhYjE5MzciLCJpYXQiOjE1OTI2Mzc2NTgsImV4cCI6MTU5MjcyNDA1OH0
-    // .09ezVz1_-ryNTBz68wWkQ00qX_RdiFqhlDqYRzpZWkQ"
-
-    yield call(loginUtils.saveLoginState, token)
-    // 如果需要延迟
-    yield put(loginAction.success(token));
 
   } catch( error ) {
     // 错误的处理

@@ -4,10 +4,10 @@
  * @func: 登录表单的实现
  ***/
 import React, {
-  memo,
+  memo, useEffect, useState,
 } from 'react';
-import { Form, Button, Input, notification } from 'antd';
-import MD5 from 'crypto-js/md5';
+import { Form, Button, Input, notification, Row, Col } from 'antd';
+import { getCaptcha } from "../../../http/user";
 
 interface IProps {
   fetch: (values: ILogin) => Promise<any>;
@@ -16,12 +16,18 @@ interface IProps {
 
 const { Item } = Form;
 const LoginMain: React.FC<IProps> = (props) => {
-
+  const [captcha, setCaptcha] = useState<string>('');
+  const [captchaKey, setCaptchaKey] = useState<string>('');
   const { loading, fetch } = props;
-
-  // values 是咱们这个表单的数据集合
-  // 加入要给 某个表单项赋予初始值，就需要给它传递一个参数initialValues
-  // 接受一个对象 键名就是 Item里边定义的name
+  const get_captcha =  () => {
+    getCaptcha().then(res => {
+      setCaptcha(res.data.captcha)
+      setCaptchaKey(res.data.captchaKey)
+    })
+  }
+  useEffect(() => {
+    get_captcha()
+  },[])
   const handleLogin = async ( values: any ) => {
     if( !values.username || !values.password ) {
       notification.warn({
@@ -29,36 +35,12 @@ const LoginMain: React.FC<IProps> = (props) => {
         description: '用户名或密码错误',
       })
     } else {
-
-      const { REACT_APP_MD5_SUFFIX } = process.env;
-      // 加密密码
-      const newPassword = MD5(`${values.password}${REACT_APP_MD5_SUFFIX}`).toString();
-
-      // 执行登录的逻辑
-      // 希望成功登录 使用这个加密过后的密码
-      // 51059a4712331fa67d5ea10854b477a6
-
-      // 2020-06-20 补充说明
-      // 加入我们有这样的需求，我们希望在组件中去处理请求过后返回的数据，
-      // async await 用一个变量去接受await的值的话，
-      // 如果await后面是一个promise 那么 变量接收到的值就是成功的值，
-      // 如果该promise失败， 则程序会终止运行。
-      // 因为 async await 本身就是一个promise 它不能捕获自身的错误
-      // 所以我们一般是配合 try catch 使用，保证程序的正常运行。
-
-      // 如果套上了try catch
       try {
-        await fetch({
-          username: values.username,
-          password: newPassword,
-        });
+        await fetch({ ...values, captchaKey });
       } catch ( error ) {
-
+        throw  new Error(error);
       }
-
-
     }
-
   };
 
   return (
@@ -74,6 +56,16 @@ const LoginMain: React.FC<IProps> = (props) => {
           </Item>
           <Item name="password">
             <Input type="password" placeholder="请输入密码" />
+          </Item>
+          <Item name="captcha">
+            <Row gutter={24}>
+              <Col span={14}>
+                <Input  placeholder="请输入验证码" />
+              </Col>
+              <Col span={10}>
+                <img src={captcha} onClick={() => { get_captcha() }} alt={captcha} className='main-form-box-captcha'/>
+              </Col>
+            </Row>
           </Item>
           <Item>
             <Button

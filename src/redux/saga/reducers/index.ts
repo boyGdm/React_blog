@@ -4,10 +4,12 @@
  * @func: sagaReducer 的集合和导出
  ***/
 import common from './common';
+import login from './login';
 import user from './user';
 
 const sagaReducer = {
   common,
-  user,
+  login,
+  user
 };
 export default sagaReducer;

@@ -17,12 +17,18 @@ import {
 import { CaretDownOutlined } from '@ant-design/icons';
 import { menuAction } from '../../../redux/saga/actions/menu';
 
+import loginUtils from '../../../utils/loginUtils'
+import { useSelector } from "react-redux";
+import LocalStore from "../../../utils/LocalStore";
 interface IProps {
 
 }
 
 const { Item } = Menu;
 const UserInfo: React.FC<IProps> = (props) => {
+  const userStore = useSelector((state:any) => state.user)
+   const nickname = LocalStore.get('userinfo')?JSON.parse(LocalStore.get('userinfo') as string).nickname : 'admin';
+  const { avata } = userStore.list;
 
   const actions = useActions({
     setDrawer: menuAction.setDrawer,
@@ -33,34 +39,28 @@ const UserInfo: React.FC<IProps> = (props) => {
   }, []);
 
   const userMenu = (
-    <Menu>
+    <Menu  style={{minWidth: '100px'}}>
       <Item onClick={() => message.info('你点击了修改密码')}>修改密码</Item>
       <Item onClick={handleSystemSettingsClick}>系统设置</Item>
       <Item onClick={() => message.info('你点击了清除缓存')}>清除缓存</Item>
-      <Item onClick={() => message.info('你点击了退出登录')}>退出登录</Item>
+      <Item onClick={() => { loginUtils.deleteLoginState() }}>退出登录</Item>
     </Menu>
   );
 
   return (
     <div className="user">
-      <Badge
-        overflowCount={99}
-        count={199}
-        title="您有199条信息"
-      >
         <Avatar
           size="small"
         >
-          T
+            <img src= {avata} alt= {avata}/>
         </Avatar>
-      </Badge>
       <Dropdown
         overlay={userMenu}
         trigger={['hover']}
       >
         <span className="name">
-          超级管理员
-          <CaretDownOutlined />
+            {nickname} 管理员
+          <CaretDownOutlined style={{marginLeft:'8px'}}/>
         </span>
       </Dropdown>
     </div>

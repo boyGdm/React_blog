@@ -5,8 +5,9 @@
  ***/
 const NAME_SPACE = {
   COMMON: 'menu-common',
-  USER: 'menu-user',
+  LOGIN: 'login',
   MENU: 'menu-menu',
+  USER: 'user',
 }
 
 export default NAME_SPACE;

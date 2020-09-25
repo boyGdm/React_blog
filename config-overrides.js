@@ -4,27 +4,34 @@
 * 所以是基于common模块化的规范
 * 项目中是基于es模块化的规范
 * */
+
 const {
-  override,
-  fixBabelImports,
-  addLessLoader,
+    override,
+    fixBabelImports,
+    addLessLoader,
+    addWebpackAlias
 } = require('customize-cra');
+const path = require('path');
+
 
 module.exports = override(
-  fixBabelImports('import', {
-    libraryName: 'antd',
-    libraryDirectory: 'es',
-    // style 的选项 ‘css' 表示引入的css文件   true 表示引入的less
-    style: true,
-  }),
-  // 这里设置less
-  // 同时是定制ant-design的主题
-  // ant-design 定制主题变量： https://ant.design/docs/react/customize-theme-cn
-  addLessLoader({
-    javascriptEnabled: true,
-    modifyVars: {
-      '@primary-color': '#d214a2',
-      '@font-size-base': '12px',
-    }
-  }),
+    fixBabelImports('import', {
+        libraryName: 'antd',
+        libraryDirectory: 'es',
+        // style 的选项 ‘css' 表示引入的css文件   true 表示引入的less
+        style: true,
+    }),
+    // 这里设置less
+    // 同时是定制ant-design的主题
+    // ant-design 定制主题变量： https://ant.design/docs/react/customize-theme-cn
+    addLessLoader({
+        javascriptEnabled: true,
+        modifyVars: {
+            '@primary-color': '#d214a2',
+            '@font-size-base': '12px',
+        }
+    }),
+    addWebpackAlias({
+        '@': path.resolve(__dirname,"src")
+    }),
 );

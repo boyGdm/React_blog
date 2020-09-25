@@ -1,9 +1,8 @@
-interface ILogin {
-  username: string;
-  password: string;
-}
-
-interface IUser {
-  loading: boolean,
-  isLogin: boolean,
+interface IUserState {
+    list:{
+        avata:string;
+        nickname:string;
+        name:string;
+        logo:string
+    }
 }

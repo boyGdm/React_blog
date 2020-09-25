@@ -1,51 +1,33 @@
 /***
  * @auth: dmx
- * @time: 2020/6/17
- * @func: user reducer
+ * @time: 2020/6/15
+ * @func: 公共reducer数据 比如 超时提示，公共的数据接口之类的
  ***/
-import { loginAction } from '../../actions/user';
+import { userAction } from '../../actions/user';
+import logo from '../../../../assets/img/logo.jpg'
 
-const initialStateSetter: IUser = {
-  isLogin: false,
-  loading: false,
+const initialStateSetter:IUserState = {
+    list: {
+        avata: logo,
+        nickname: 'admin',
+        name: 'salmontech',
+        logo: logo
+    }
 }
 
-export default function (state = initialStateSetter, action: ActionParams) {
-
-  switch (action.type) {
-    case loginAction.TRIGGER: {
-      return {
-        ...state,
-        loading: true,
-      }
+export default ( state = initialStateSetter, action: ActionParams ) => {
+    switch (action.type) {
+        // TRIGGER ==> 发起请求的时候
+        // SUCCESS ==> 成功的时候
+        // FAILURE ==> 失败的时候
+        // FULFILL ==> 完成的时候
+        // REQUEST ==> 一般不在这里使用
+        case userAction.TRIGGER: {
+            return {
+                ...state,
+                ...action.payload
+            }
+        }
     }
-
-    case loginAction.SUCCESS: {
-      return {
-        ...state,
-        isLogin: true,
-        loading: false,
-        // 这里是预防，这里暂时用不着这么写，但是万一将来需求有变化。
-        ...action.payload,
-      }
-    }
-    case loginAction.FAILURE: {
-      return {
-        ...state,
-        loading: false,
-      }
-    }
-
-    case loginAction.FULFILL: {
-      return {
-        ...state,
-        loading: false,
-      }
-    }
-
-    default:
-      return state;
-
-  }
-
-}
+    return state;
+};

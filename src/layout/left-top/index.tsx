@@ -29,6 +29,7 @@ const LeftTopSidebar: React.FC<IProps> = (props) => {
 
   const { collapsed, history, location: {pathname} } = props;
   const { currentSidebar, currentTopMenu, theme, primaryColor } = useSelector((state: IState) => state.menu );
+  const { name, logo } = useSelector((state:any) => state.user.list);
   //
   const [keys, setKeys] = useState<{ currentOpenSubs: string[], currentSideMenu: string }>({
     currentSideMenu: '',
@@ -132,7 +133,6 @@ const LeftTopSidebar: React.FC<IProps> = (props) => {
       // 如果匹配失败， 咱们就重定向
       if( !matchPath(pathname, { path: currentSideMenu }) ) history.push(currentSideMenu);
 
-
       setKeys({
         currentSideMenu,
         currentOpenSubs,
@@ -142,7 +142,8 @@ const LeftTopSidebar: React.FC<IProps> = (props) => {
 
   const style = useMemo(() => ({
     sidebar: {
-      boxShadow: `1px 0 6px ${primaryColor}`,
+      // boxShadow: `1px 0 6px ${primaryColor}`,
+      boxShadow: `2px 0 8px 0 rgba(29,35,41,.05)`,
       background: theme === 'light' ? '#fff' : primaryColor,
     },
     logoColor: {
@@ -172,7 +173,7 @@ const LeftTopSidebar: React.FC<IProps> = (props) => {
           className="logo-title"
           style={style.logoColor}
         >
-          dd-cms
+          {name}
         </span>
       </div>
       <Menu

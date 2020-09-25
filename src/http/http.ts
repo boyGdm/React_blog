@@ -13,6 +13,7 @@ import { message } from 'antd';
 import { setRetryTip } from '../redux/saga/actions/common';
 import store from '../redux';
 import isRetryAllowed from './isRetryAllowed';
+import loginUtils from "../utils/loginUtils";
 
 // 定义一个请求的参数类型声明
 type requestFn = (url: string, params?: Object, data?: Object | null) => AxiosPromise;
@@ -42,7 +43,7 @@ class Http {
     axios.defaults.timeout = 10000;
     axios.defaults.baseURL = process.env.REACT_APP_API_URL;
     axios.defaults.headers = {
-      "Content-Type": 'application/json;charset=UTF-8',
+      "Content-Type": 'application/json',
     }
 
     // 去执行 请求拦截器 和 响应拦截器
@@ -56,26 +57,9 @@ class Http {
   useInterceptResponse () {
     this.axios.interceptors.response.use(
       (res) => {
-        // 处理逻辑
-        // errorCode, errMsg 这些字段,也是后端返回的,有可能是 status  有可能是success
-        if( res.data.errorCode === '101010500' ) {
-          message.error('服务器错误,请联系管理员');
-          return Promise.reject(res.data);
+        if( res.data.code !== 0 ) {
+          message.error(res.data.msg || '服务器异常');
         }
-
-        // token 过期了,
-        if( res.data.errorCode === '102022001' ) {
-          message.error('身份信息已过期,请重新登录');
-          // 还需要跳转到 login页面 这个逻辑,但不在这里处理,
-        }
-        // 然后就是别的情况
-        if( res.data.errorCode !== 0 ) {
-          message.error(res.data.errMsg || '服务器异常');
-          return Promise.reject(res.data);
-        }
-
-        // 如果还有别的逻辑 就在这里加就行了
-
         return Promise.resolve(res.data);
       },
       (error: AxiosError) => {
@@ -134,8 +118,8 @@ class Http {
         // 然后咱们封装一个获取登陆状态的工具函数,在里面去处理 token保存和token过期时刷新token的逻辑
         // 大概是这样子 const token = loginUtils.getToken();
         // 也就是说,逻辑不应该放在这里处理.
-        const token = await 'abs.abs.abs';
-        if( token ) newConfig.headers.authtoken = token;
+        const token = await loginUtils.getToken();
+        if( token ) newConfig.headers.Authorization = `Bearer ${token}`;
 
         // 如果还有别的需求要处理,就在这里面去写就ok了
 
@@ -180,7 +164,7 @@ class Http {
     // 因为get请求，很有可能会被缓存，所以我们需要给它加一个随机参数，
     // 实现： 因为params 是已经存在的， 我们只需要给它扩展一个随机数的变量即可
     const newParams = Object.assign(params, {
-      [`dmx${new Date().getTime()}`]: 1,
+      [`gdm${new Date().getTime()}`]: 1,
     });
 
     return this.fetchData('get', url, {params: newParams});

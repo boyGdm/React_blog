@@ -1,3 +1,6 @@
+## 界面
+![image](https://github.com/boyGdm/React_blog/blob/master/r1.png)
+![image](https://github.com/boyGdm/React_blog/blob/master/r2.png)
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

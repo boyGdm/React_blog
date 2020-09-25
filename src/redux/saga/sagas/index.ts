@@ -4,7 +4,7 @@
  * @func: rootSaga
  ***/
 import { all, fork } from 'redux-saga/effects';
-import user from './user/user';
+import user from './login/login';
 
 const rootSaga = function* () {
   yield all([
